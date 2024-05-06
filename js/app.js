@@ -53,11 +53,11 @@ class Game {
   }
   // render draggable ship previews
   renderShipPreviews() {
-    sloop.renderShipPreview();
-    sloop2.renderShipPreview();
-    brig.renderShipPreview();
-    galleon.renderShipPreview();
-    flagship.renderShipPreview();
+    sloop.renderShip();
+    sloop2.renderShip();
+    brig.renderShip();
+    galleon.renderShip();
+    flagship.renderShip();
   }
 }
 
@@ -67,11 +67,27 @@ class Ship {
         this.length = length;
         this.ship = document.createElement("div");
         this.preview = document.createElement("div");
+        this.rotated = false;
     }
-    renderShipPreview() {
+    renderShip() {
         this.preview.classList.add(`${this.type}Preview`)
+        this.preview.classList.add(`${this.type}`)
         this.preview.draggable = true;
         game.shipContainer.appendChild(this.preview);
+        this.toggleRotate();
+    }
+    toggleRotate() {
+        document.addEventListener('keydown', (event) => {
+            const keyPressed = event.key.toLowerCase();
+            if (keyPressed === 'r') {
+                if (this.rotated) {
+                    this.preview.style.transform = "rotate(0deg)";
+                } else {
+                    this.preview.style.transform = "rotate(90deg)";
+                }
+                this.rotated = !this.rotated;
+            }
+        });
     }
 }
 
@@ -82,3 +98,35 @@ const brig = new Ship("brig", 3);
 const galleon = new Ship("galleon", 4);
 const flagship = new Ship("flagship", 5);
 game.renderGame();
+
+const ships = [sloop, sloop2, brig, galleon, flagship];
+
+function placeShips(ship) {
+    const cells = document.querySelectorAll("#computerGrid div")
+    let randomCell = Math.floor(Math.random() * 100);
+    let randomBoolean = Math.random() < 0.5;
+    let rotated = true;
+    let shipCells = [];
+
+    for (let i = 0; i < ship.length; i++) {
+        if (rotated) {
+            shipCells.push(cells[randomCell + i]);
+            console.log(shipCells)
+        } else {
+            shipCells.push(cells[randomCell + 10 * i]);
+            console.log(shipCells)
+        }
+    }
+
+    shipCells.forEach(shipCell => {
+        shipCell.id = `${ship.type}`;
+        shipCell.classList.add("computerShip");
+        shipCell.classList.add("populated")
+    })
+
+    // console.log(cells);
+    // console.log(randomCell)
+}
+ships.forEach(ship => {placeShips(ship)})
+
+placeShips(sloop);
