@@ -1,5 +1,7 @@
 .gameboard {
   display: flex;
+  position: relative;
+  top: -50px;
   margin: 200px auto;
 }
 
@@ -9,18 +11,82 @@
   overflow: visible;
 }
 
-.cell {
+.playercell {
   display: inline-block;
-  border: 1px solid rgb(0, 0, 0);
+  border: 1px solid #254fb9;
+  background-color: #278fe5;
   box-sizing: border-box;
-  width: 40px;
+  background: url(/assets/tiles/Water16x16.png);
+  background-size: 150px;
+  background-position: 13% 15%;
+  animation: waves 5s infinite alternate-reverse linear;
+}
+
+@keyframes waves {
+  0% {
+    background-position: 13% 15%;
+    filter: brightness(105%) contrast(100%);
+  }
+  100% {
+    background-position: 24% 16%;
+    filter: brightness(110%) contrast(120%);
+  }
+}
+
+.computercell {
+  display: inline-block;
+  border: 1px solid #2f3239;
+  background-color: #3b4f62;
+  box-sizing: border-box;
+  background-size: 150px;
+  background-position: 15% 15%;
+}
+
+.shipContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #3162de;
+  border-radius: 2px;
+  box-sizing: border-box;
+  padding: 10px;
+  position: absolute;
+  top: 405px;
+  /* left: -25%; */
+}
+
+.sloopPreview {
+  background-color: #5e3a25;
+  width: 80px;
   height: 40px;
+  margin: 5px;
+}
+
+.brigPreview {
+  background-color: #5e3a25;
+  width: 120px;
+  height: 40px;
+  margin: 5px;
+}
+
+.galleonPreview {
+  background-color: #5e3a25;
+  width: 160px;
+  height: 40px;
+  margin: 5px;
+}
+
+.flagshipPreview {
+  background-color: #5e3a25;
+  width: 200px;
+  height: 40px;
+  margin: 5px;
 }
 
 /* 
-mobile design
-
-@media only screen and (max-width: 850px) {
+mobile idea
+*/
+/* @media only screen and (max-width: 850px) {
   .gameboard {
     display: flex;
     justify-content: center;
