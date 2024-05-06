@@ -11,6 +11,12 @@
   overflow: visible;
 }
 
+#computerGrid {
+  background: url("/assets/backgrounds/storm_gif.gif");
+  background-size: 120%;
+  filter: brightness(100%) contrast(100%);
+}
+
 .playercell {
   display: inline-block;
   border: 1px solid #254fb9;
@@ -28,18 +34,19 @@
     filter: brightness(105%) contrast(100%);
   }
   100% {
-    background-position: 24% 16%;
+    background-position: 24% 17%;
     filter: brightness(110%) contrast(120%);
   }
 }
 
 .computercell {
   display: inline-block;
-  border: 1px solid #2f3239;
-  background-color: #3b4f62;
+  border: 1px solid #141414;
   box-sizing: border-box;
-  background-size: 150px;
-  background-position: 15% 15%;
+}
+
+.computercell:hover {
+  border: 2px solid #6380ff;
 }
 
 .shipContainer {
@@ -49,7 +56,6 @@
   border: 2px solid #3162de;
   border-radius: 2px;
   box-sizing: border-box;
-  padding: 10px;
   position: absolute;
   top: 405px;
   /* left: -25%; */
@@ -81,6 +87,10 @@
   width: 200px;
   height: 40px;
   margin: 5px;
+}
+
+.computerShip {
+  background-color: red;
 }
 
 /* 
