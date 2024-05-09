@@ -1,14 +1,41 @@
+/* 
+Classes needed for
+MAIN gameboard
+    - border
+    - fixed height/width
+Grid
+    - fixed width - 1/2 gameboard
+Cells main class
+    - border
+    - maybe fix dimensions
+All ship types
+    - color variations
+    - fixed dimensions
+Fixed dimensions will help me simplify some of the math in my app.js
+*/
+
+body {
+  height: 100%;
+  width: 100vw;
+  margin: 0 auto;
+}
+
 .gameboard {
   display: flex;
-  position: relative;
-  top: -50px;
-  margin: 200px auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 400px;
 }
 
 .grid {
-  display: flex;
-  flex-wrap: wrap;
-  overflow: visible;
+display: flex;
+flex-wrap: wrap;
+overflow: visible;
+height: 400px;
+width: 400px;
 }
 
 #computerGrid {
@@ -17,96 +44,85 @@
   filter: brightness(100%) contrast(100%);
 }
 
-.playercell {
-  display: inline-block;
-  border: 1px solid #254fb9;
-  background-color: #278fe5;
-  box-sizing: border-box;
-  background: url(/assets/tiles/Water16x16.png);
-  background-size: 150px;
-  background-position: 13% 15%;
-  animation: waves 5s infinite alternate-reverse linear;
-}
-
-@keyframes waves {
-  0% {
-    background-position: 13% 15%;
-    filter: brightness(105%) contrast(100%);
-  }
-  100% {
-    background-position: 24% 17%;
-    filter: brightness(110%) contrast(120%);
-  }
-}
-
-.computercell {
+.cell {
+  width: 40px;
+  height: 40px;
   display: inline-block;
   border: 1px solid #141414;
   box-sizing: border-box;
 }
 
-.computercell:hover {
-  border: 2px solid #6380ff;
+.cell:hover {
+  border: 3px solid #0088ff;
+}
+
+.playerCell {
+  display: inline-block;
+  border: 1px solid #254fb9;
+  background-color: #278fe5;
+  box-sizing: border-box;
+  background: url("/assets/tiles/Water16x16.png");
+  background-size: 150px;
+  background-position: 14% 15%;
+  animation: waves 3s infinite alternate-reverse linear;
+}
+
+@keyframes waves {
+  0% {
+    background-position: 14% 15%;
+    filter: brightness(105%) contrast(100%);
+  }
+  100% {
+    background-position: 26% 17%;
+    filter: brightness(110%) contrast(110%);
+  }
 }
 
 .shipContainer {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  border: 2px solid #3162de;
-  border-radius: 2px;
-  box-sizing: border-box;
   position: absolute;
-  top: 405px;
-  /* left: -25%; */
+  align-items: center;
+  margin: 0 auto;
+  left: -37%;
+  top: -25%;
+  width: 250px;
+  height: 600px;
+  border: 3px solid #278fe5;
+  box-sizing: border-box;
+  border-radius: 5px;
 }
 
-.sloopPreview {
-  background-color: #5e3a25;
+.shipPreview {
+  background-color: rgb(156, 98, 52);
+  height: 30px;
+  margin: 10px;
+}
+
+.button {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bold;
+  color: rgb(19, 58, 95);
+  height: 40px;
   width: 80px;
-  height: 40px;
-  margin: 5px;
+  background-color: #0088ff;
+  border: 2px solid #2e7cbf;
+  border-radius: 5px;
 }
 
-.brigPreview {
-  background-color: #5e3a25;
-  width: 120px;
-  height: 40px;
-  margin: 5px;
+#startButton {
+  position: absolute;
+  transform: translate(360px, 425px);
 }
 
-.galleonPreview {
-  background-color: #5e3a25;
-  width: 160px;
-  height: 40px;
-  margin: 5px;
+#rotateButton {
+  position: absolute;
+  top: 522px;
 }
 
-.flagshipPreview {
-  background-color: #5e3a25;
-  width: 200px;
-  height: 40px;
-  margin: 5px;
+hr {
+  display: block;
+  position: relative;
+  top: 628px;
 }
-
-.computerShip {
-  background-color: red;
-}
-
-/* 
-mobile idea
-*/
-/* @media only screen and (max-width: 850px) {
-  .gameboard {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column-reverse;
-    margin: 50px auto;
-    height: 100vh;
-    position: relative;
-    top: 0;
-    left: 0;
-    transform: translateY(50%);
-  }
-} */
