@@ -4,12 +4,16 @@ class Game {
     this.width = 10;
     this.elements = {
       buttons: {
-        // startButton
+        // startButton -> renderGame
+        // rotateButton -> renderShipContainer
       },
       grids: {
         // playerGrid
         //computerGrid
       },
+      ships: [
+        // pushing ship types from Ship class render method
+      ],
       // gameboard
       // shipContainer
     };
@@ -18,7 +22,6 @@ class Game {
     this.renderGameboard();
     this.renderShipContainer();
     this.renderButton("start", "gameboard");
-    this.renderButton("rotate", "shipContainer");
   }
   renderGameboard() {
     this.elements.gameboard = document.createElement("div");
@@ -26,13 +29,6 @@ class Game {
     document.body.append(this.elements.gameboard);
     this.renderGrid("player");
     this.renderGrid("computer");
-  }
-  renderButton(buttonName, location) {
-    this.elements.buttons[`${buttonName}Button`] = document.createElement("button");
-    this.elements.buttons[`${buttonName}Button`].classList.add("button");
-    this.elements.buttons[`${buttonName}Button`].id = `${buttonName}Button`;
-    this.elements.buttons[`${buttonName}Button`].innerHTML = buttonName.toUpperCase();
-    this.elements[location].appendChild(this.elements.buttons[`${buttonName}Button`]);
   }
   renderGrid(user) {
     this.elements.grids[`${user}Grid`] = document.createElement("div");
@@ -53,18 +49,37 @@ class Game {
     this.elements.shipContainer = document.createElement("div");
     this.elements.shipContainer.classList.add("shipContainer");
     this.elements.gameboard.appendChild(this.elements.shipContainer);
-    this.renderShipPreview(sloop);
-    this.renderShipPreview(sloop_2);
-    this.renderShipPreview(brig);
-    this.renderShipPreview(galleon);
-    this.renderShipPreview(dreadnought);
+    this.renderButton("rotate", "shipContainer", () => {
+      this.elements.ships.forEach((ship) => this.shipRotate(ship));
+    });
+    sloop.renderShipPreview(this.elements.shipContainer);
+    sloop_2.renderShipPreview(this.elements.shipContainer);
+    brig.renderShipPreview(this.elements.shipContainer);
+    galleon.renderShipPreview(this.elements.shipContainer);
+    dreadnought.renderShipPreview(this.elements.shipContainer);
   }
-  renderShipPreview(ship) {
-    ship.preview.classList.add("shipPreview");
-    ship.preview.id = ship.type;
-    ship.preview.draggable = true;
-    ship.preview.style.width = `${ship.length * 35}px`;
-    this.elements.shipContainer.appendChild(ship.preview);
+  shipRotate(ship) {
+    if (ship.angle === 0) {
+      ship.angle += 90;
+    } else {
+      ship.angle = 0;
+    }
+    ship.preview.style.transform = `rotate(${ship.angle}deg)`;
+  }
+  renderButton(buttonName, location, event) {
+    this.elements.buttons[`${buttonName}Button`] =
+      document.createElement("button");
+    this.elements.buttons[`${buttonName}Button`].classList.add("button");
+    this.elements.buttons[`${buttonName}Button`].id = `${buttonName}Button`;
+    this.elements.buttons[`${buttonName}Button`].innerHTML =
+      buttonName.toUpperCase();
+    this.elements[location].appendChild(
+      this.elements.buttons[`${buttonName}Button`]
+    );
+    this.elements.buttons[`${buttonName}Button`].addEventListener(
+      "click",
+      event
+    );
   }
 }
 
@@ -73,17 +88,33 @@ class Ship {
     this.type = type;
     this.length = length;
     this.preview = document.createElement("div");
+    this.angle = 0;
   }
+  renderShipPreview(container) {
+    game.elements.ships.push(this);
+    this.preview.classList.add("shipPreview");
+    this.preview.id = this.type;
+    this.preview.draggable = true;
+    this.preview.style.width = `${this.length * 35}px`;
+    container.appendChild(this.preview);
+  }
+  // rotate() {
+  //   if (this.angle === 0) {
+  //     this.angle += 90;
+  //     this.preview.style.transform = `rotate(${this.angle}deg)`;
+  //   } else {return}
+  // }
 }
 
 const game = new Game();
 const sloop = new Ship("sloop", 2);
-const sloop_2 = new Ship("sloop_2", 2)
+const sloop_2 = new Ship("sloop_2", 2);
 const brig = new Ship("brig", 3);
 const galleon = new Ship("galleon", 4);
 const dreadnought = new Ship("dreadnought", 5);
 
 game.renderGame();
 console.log(game.elements);
-console.log(game.elements.buttons)
-console.log(game.elements.grids)
+console.log(game.elements.ships);
+console.log(game.elements.buttons);
+console.log(game.elements.grids);
