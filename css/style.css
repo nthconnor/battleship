@@ -18,12 +18,13 @@ body {
   height: 100%;
   width: 100vw;
   margin: 0 auto;
+  background: #ffffff;
 }
 
 .gameboard {
   display: flex;
   position: fixed;
-  top: 50%;
+  top: 34%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 800px;
@@ -80,15 +81,14 @@ width: 400px;
 
 .shipContainer {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   position: absolute;
   align-items: center;
   margin: 0 auto;
-  left: -37%;
-  top: -25%;
-  width: 250px;
-  height: 600px;
+  top: 105%;
+  width: 800px;
+  height: 200px;
   border: 3px solid #278fe5;
   box-sizing: border-box;
   border-radius: 5px;
@@ -97,28 +97,32 @@ width: 400px;
 .shipPreview {
   background-color: rgb(156, 98, 52);
   height: 30px;
-  margin: 10px;
+  margin: 5px;
 }
 
 .button {
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-weight: bold;
   color: rgb(19, 58, 95);
   height: 40px;
   width: 80px;
   background-color: #0088ff;
-  border: 2px solid #2e7cbf;
+  border: 2px solid #99cffe;
   border-radius: 5px;
+}
+
+.button:hover {
+  filter: brightness(80%);
 }
 
 #startButton {
   position: absolute;
-  transform: translate(360px, 425px);
+  transform: translate(360px, -50px);
 }
 
 #rotateButton {
   position: absolute;
-  top: 522px;
+  top: 210px;
 }
 
 hr {
