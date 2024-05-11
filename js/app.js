@@ -22,6 +22,7 @@ class Game {
     this.renderGameboard();
     this.renderShipContainer();
     this.renderButton("start", "gameboard");
+    this.elements.ships.forEach((ship) => this.placeShip("computer", ship));
   }
   renderGameboard() {
     this.elements.gameboard = document.createElement("div");
@@ -81,6 +82,42 @@ class Game {
       event
     );
   }
+  placeShip(user, ship) {
+    const cells = document.querySelectorAll(`#${user}Grid div`);
+    let randomCell = Math.floor(Math.random() * 100);
+    let rotated = Math.random() < 0.5;
+    let shipCells = [];
+    populateCells();
+
+    function populateCells() {
+        for (let i = 0; i < ship.length; i++) {
+            if (rotated) {
+                shipCells.push(cells[Number(validCell()) + i])
+            } else {
+                shipCells.push(cells[Number(validCell()) + i * game.width])
+            }
+        }
+        shipCells.forEach(cell => {
+            cell.classList.add(ship.type)
+            cell.classList.add("taken")
+        })
+    }
+    function validCell() {
+        if (rotated) {
+            if (randomCell <= 100 - ship.length) {
+                return randomCell
+            } else {
+                return 100 - ship.length
+            }
+        } else {
+            if (randomCell <= 100 - 10 * ship.length) {
+                return randomCell
+            } else {
+                return randomCell - ship.length * 10 + 10
+            }
+        }
+    }
+  }
 }
 
 class Ship {
@@ -95,6 +132,7 @@ class Ship {
     this.preview.classList.add("shipPreview");
     this.preview.id = this.type;
     this.preview.draggable = true;
+    this.preview.dataset.shipType = this.type;
     this.preview.style.width = `${this.length * 35}px`;
     container.appendChild(this.preview);
   }
@@ -114,7 +152,4 @@ const galleon = new Ship("galleon", 4);
 const dreadnought = new Ship("dreadnought", 5);
 
 game.renderGame();
-console.log(game.elements);
-console.log(game.elements.ships);
-console.log(game.elements.buttons);
-console.log(game.elements.grids);
+console.log(game.elements.shipContainer.children)
