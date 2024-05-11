@@ -100,6 +100,28 @@ width: 400px;
   margin: 5px;
 }
 
+.sloop {
+  background: #a07858;
+}
+.sloop_2 {
+  background: #a18065;
+}
+.brig {
+  background: #894e1d;
+}
+.galleon {
+  background: #4b321e;
+}
+.dreadnought {
+  background: #4b1b12;
+}
+
+.playerShip {
+  background-image: none;
+  background-color: #9c6234;
+  border: #603f23;
+}
+
 .button {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-weight: bold;
