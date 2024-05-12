@@ -1,6 +1,6 @@
 class Game {
   constructor() {
-    this.height = 5;
+    this.height = 10;
     this.width = 10;
     this.elements = {
       buttons: {
@@ -22,7 +22,11 @@ class Game {
     this.renderGameboard();
     this.renderShipContainer();
     this.renderButton("start", "gameboard");
-    this.elements.ships.forEach((ship) => this.placeShip("computer", ship));
+    this.addShip("computer", sloop);
+    this.addShip("computer", sloop_2);
+    this.addShip("computer", brig);
+    this.addShip("computer", galleon);
+    this.addShip("computer", dreadnought);
   }
   renderGameboard() {
     this.elements.gameboard = document.createElement("div");
@@ -82,40 +86,61 @@ class Game {
       event
     );
   }
-  placeShip(user, ship) {
+  getRandomCellBlock() {
+    const randomCellIndex = Math.floor(Math.random() * 100);
+    const randomRow = Math.floor(randomCellIndex / this.width);
+    const randomCol = randomCellIndex % this.width;
+    return { row: randomRow, col: randomCol };
+  }
+  addShip(user, ship) {
     const cells = document.querySelectorAll(`#${user}Grid div`);
-    let randomCell = Math.floor(Math.random() * 100);
-    let rotated = Math.random() < 0.5;
     let shipCells = [];
-    populateCells();
+    let rotated = Math.random() < 0.5;
+    let randomCellBlock;
+    let startCell;
 
-    function populateCells() {
-        for (let i = 0; i < ship.length; i++) {
-            if (rotated) {
-                shipCells.push(cells[Number(validCell()) + i])
-            } else {
-                shipCells.push(cells[Number(validCell()) + i * game.width])
-            }
-        }
-        shipCells.forEach(cell => {
-            cell.classList.add(ship.type)
-            cell.classList.add("taken")
-        })
+    do {
+      randomCellBlock = this.getRandomCellBlock();
+      startCell = parseInt(`${randomCellBlock.row}${randomCellBlock.col}`);
+    } while (!validCell(startCell));
+
+    for (let i = 0; i < ship.length; i++) {
+      if (rotated) {
+        shipCells.push(cells[startCell + i])
+      } else {
+        shipCells.push(cells[startCell + i * 10])
+      }
     }
-    function validCell() {
-        if (rotated) {
-            if (randomCell <= 100 - ship.length) {
-                return randomCell
-            } else {
-                return 100 - ship.length
+    shipCells.forEach((cell) => {
+      cell.classList.add(ship.type);
+      cell.classList.add("taken");
+    });
+
+    function validCell(startCell) {
+      const startRow = randomCellBlock.row;
+      const startCol = randomCellBlock.col;
+      if (rotated) {
+        if (startCol + ship.length <= 10) {
+          for (let i = startCol; i < startCol + ship.length; i++) {
+            const index = startRow * 10 + i;
+            if (cells[index].classList.contains("taken")) {
+              return false;
             }
-        } else {
-            if (randomCell <= 100 - 10 * ship.length) {
-                return randomCell
-            } else {
-                return randomCell - ship.length * 10 + 10
-            }
+          }
+          return startCell;
         }
+      } else {
+        if (startRow + ship.length <= 10) {
+          for (let i = startRow; i < startRow + ship.length; i++) {
+            const index = i * 10 + startCol;
+            if (cells[index].classList.contains("taken")) {
+              return false;
+            }
+          }
+          return startCell;
+        }
+      }
+      return false;
     }
   }
 }
@@ -152,4 +177,3 @@ const galleon = new Ship("galleon", 4);
 const dreadnought = new Ship("dreadnought", 5);
 
 game.renderGame();
-console.log(game.elements.shipContainer.children)
