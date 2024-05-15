@@ -31,7 +31,10 @@ class Game {
   }
   onStart() {
     this.renderGame();
-    this.handlePlayerTurn();
+    setTimeout(() => {
+      this.handlePlayerTurn();
+    }, 7000)
+    this.handleComputerTurn();
     this.elements.buttons.startButton.style.display = "none";
     this.elements.buttons.rulesButton.style.display = "none";
     this.elements.title.style.visibility = "hidden";
@@ -40,9 +43,6 @@ class Game {
     this.elements.audio.soundtrack.play();
     this.elements.audio.ambience.play();
     this.elements.audio.startButton.play();
-    setTimeout(() => {
-      this.isRunning = true;
-    }, 4000);
   }
   renderTitle() {
     this.elements.title.innerText = "PIRATESHIP";
@@ -245,6 +245,7 @@ class Game {
       computerCells[i].addEventListener("click", handleClick);
     }
     function handleClick(e) {
+      game.isRunning = true;
       if (game.isRunning) {
         game.elements.audio.cannon_1.currentTime = 0;
         game.elements.audio.cannon_1.play();
@@ -275,6 +276,54 @@ class Game {
       }
     }
   }
+  handleComputerTurn() {
+    const playerCells = document.querySelectorAll("#playerGrid div");
+    const playerShipHealth = {
+      sloop: 2,
+      sloop_2: 2,
+      brig: 3,
+      galleon: 4,
+      dreadnought: 5,
+    };
+    setInterval(computerMove, 1000)
+    function computerMove() {
+      if (game.isRunning) {
+        let randomCellIndex = getRandomCellIndex();
+        let randomCell = playerCells[randomCellIndex];
+        if (randomCell.classList.contains("taken")) {
+          console.log("computer hit player ship");
+          const shipID = randomCell.id;
+          playerShipHealth[shipID] -= 1;
+          randomCell.classList.add("hit");
+          randomCell.style.backgroundImage = "none"
+          checkBoard(shipID);
+          game.elements.audio.shipHit.currentTime = 0;
+          game.elements.audio.shipHit.play();
+        } else {
+          console.log("computer missed player ship");
+          randomCell.style.backgroundImage = "none"
+          randomCell.classList.add("miss");
+          console.log("computer reloading");
+          randomCell.classList.remove("miss");
+        }
+      }
+      function checkBoard(shipID) {
+        if (playerShipHealth[shipID] === 0) {
+          const sunkShipCells = document.querySelectorAll(
+            `#playerGrid #${shipID}`
+          );
+          sunkShipCells.forEach((cell) => {
+            cell.classList.remove("taken");
+            cell.classList.add("sunk");
+            cell.innerHTML = "Ώ";
+          });
+        }
+      }
+    }
+    function getRandomCellIndex() {
+      return Math.floor(Math.random() * 100);
+    }
+  }
   handleAudio() {
     const main_theme = this.elements.audio.soundtrack;
     main_theme.src = "/assets/audio/main_theme.mp3";
@@ -293,7 +342,7 @@ class Game {
     cannon_2.volume = 0.3;
     const cannonAmbient = this.elements.audio.cannonAmbient;
     cannonAmbient.src = "/assets/audio/distant_cannons.mp3";
-    cannonAmbient.volume = 0.45;
+    cannonAmbient.volume = 0.5;
     cannonAmbient.loop = true;
     const shipHit = this.elements.audio.shipHit;
     shipHit.src = "/assets/audio/ship_hit.mp3";
