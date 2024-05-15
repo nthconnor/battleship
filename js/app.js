@@ -20,13 +20,7 @@ class Game {
   }
   renderGame() {
     this.renderGameboard();
-    this.renderShipContainer();
     this.renderButton("start", "gameboard");
-    this.addShip("computer", sloop);
-    this.addShip("computer", sloop_2);
-    this.addShip("computer", brig);
-    this.addShip("computer", galleon);
-    this.addShip("computer", dreadnought);
   }
   renderGameboard() {
     this.elements.gameboard = document.createElement("div");
@@ -106,13 +100,13 @@ class Game {
 
     for (let i = 0; i < ship.length; i++) {
       if (rotated) {
-        shipCells.push(cells[startCell + i])
+        shipCells.push(cells[startCell + i]);
       } else {
-        shipCells.push(cells[startCell + i * 10])
+        shipCells.push(cells[startCell + i * 10]);
       }
     }
     shipCells.forEach((cell) => {
-      cell.classList.add(ship.type);
+      cell.classList.add(`${user}_${ship.type}`);
       cell.classList.add("taken");
     });
 
@@ -177,3 +171,37 @@ const galleon = new Ship("galleon", 4);
 const dreadnought = new Ship("dreadnought", 5);
 
 game.renderGame();
+game.addShip("computer", sloop);
+game.addShip("computer", sloop_2);
+game.addShip("computer", brig);
+game.addShip("computer", galleon);
+game.addShip("computer", dreadnought);
+game.addShip("player", sloop);
+game.addShip("player", sloop_2);
+game.addShip("player", brig);
+game.addShip("player", galleon);
+game.addShip("player", dreadnought);
+
+// handle turn logic
+// player should click a cell, display feedback on wether it was a hit or miss
+// computer selects a cell at random - display feedback
+// *** if computer hits, target cells in that area
+// handle win/loss
+//  if all ships on either side sink
+// end game
+
+
+/* 
+computer turn {
+  let suggestedHits = []
+  let randomIndex = Math.random() * suggesthits.length ?
+  if (!playerturn) {
+    randomcell()
+    if (randomcell.classlist.contains("taken") {
+      randomcell.classlist.remove("taken")
+      randomcell.classlist.add("hit")
+      suggestedHits.push((randomcell + 1), (randomcell - 1), (randomcell + 10), randomcell - 10)
+    })
+  }
+}
+*/
