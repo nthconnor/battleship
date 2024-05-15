@@ -224,8 +224,16 @@ width: 400px;
   background-color: #41f426b4;
 }
 
+.computerHit {
+  background-color: #da3737;
+}
+
 .miss {
-  background-color: #ff0000a5;
+  background-color: #da3737db;
+}
+
+.computerMiss {
+  background-color: #1a3972;
 }
 
 .sunk {

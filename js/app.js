@@ -33,7 +33,7 @@ class Game {
     this.renderGame();
     setTimeout(() => {
       this.handlePlayerTurn();
-    }, 7000)
+    }, 8000);
     this.handleComputerTurn();
     this.elements.buttons.startButton.style.display = "none";
     this.elements.buttons.rulesButton.style.display = "none";
@@ -43,6 +43,9 @@ class Game {
     this.elements.audio.soundtrack.play();
     this.elements.audio.ambience.play();
     this.elements.audio.startButton.play();
+    setTimeout(() => {
+      this.isRunning = true;
+    }, 8000);
   }
   renderTitle() {
     this.elements.title.innerText = "PIRATESHIP";
@@ -244,8 +247,8 @@ class Game {
     for (let i = 0; i < computerCells.length; i++) {
       computerCells[i].addEventListener("click", handleClick);
     }
+    setInterval(checkWinLoss, 1000);
     function handleClick(e) {
-      game.isRunning = true;
       if (game.isRunning) {
         game.elements.audio.cannon_1.currentTime = 0;
         game.elements.audio.cannon_1.play();
@@ -275,9 +278,22 @@ class Game {
         }
       }
     }
+    function checkWinLoss() {
+      if (
+        computerShipHealth.sloop === 0 &&
+        computerShipHealth.sloop_2 === 0 &&
+        computerShipHealth.brig === 0 &&
+        computerShipHealth.galleon === 0 &&
+        computerShipHealth.dreadnought === 0
+      ) {
+        game.endGame("win");
+        return;
+      }
+    }
   }
   handleComputerTurn() {
     const playerCells = document.querySelectorAll("#playerGrid div");
+    let randomCell;
     const playerShipHealth = {
       sloop: 2,
       sloop_2: 2,
@@ -285,27 +301,27 @@ class Game {
       galleon: 4,
       dreadnought: 5,
     };
-    setInterval(computerMove, 1000)
+    setTimeout(() => setInterval(computerMove, 1500), 1000);
     function computerMove() {
       if (game.isRunning) {
-        let randomCellIndex = getRandomCellIndex();
-        let randomCell = playerCells[randomCellIndex];
+        do {
+          let randomCellIndex = getRandomCellIndex();
+          randomCell = playerCells[randomCellIndex];
+        } while (randomCell.classList.contains("computerMiss"));
+        console.log(randomCell);
         if (randomCell.classList.contains("taken")) {
-          console.log("computer hit player ship");
           const shipID = randomCell.id;
           playerShipHealth[shipID] -= 1;
-          randomCell.classList.add("hit");
-          randomCell.style.backgroundImage = "none"
+          randomCell.classList.add("computerHit");
+          randomCell.style.backgroundImage = "none";
           checkBoard(shipID);
           game.elements.audio.shipHit.currentTime = 0;
           game.elements.audio.shipHit.play();
         } else {
-          console.log("computer missed player ship");
-          randomCell.style.backgroundImage = "none"
-          randomCell.classList.add("miss");
-          console.log("computer reloading");
-          randomCell.classList.remove("miss");
+          randomCell.classList.add("computerMiss");
+          randomCell.style.backgroundImage = "none";
         }
+        checkWinLoss();
       }
       function checkBoard(shipID) {
         if (playerShipHealth[shipID] === 0) {
@@ -323,11 +339,41 @@ class Game {
     function getRandomCellIndex() {
       return Math.floor(Math.random() * 100);
     }
+    function checkWinLoss() {
+      if (
+        playerShipHealth.sloop === 0 &&
+        playerShipHealth.sloop_2 === 0 &&
+        playerShipHealth.brig === 0 &&
+        playerShipHealth.galleon === 0 &&
+        playerShipHealth.dreadnought === 0
+      ) {
+        game.endGame("loss");
+      }
+    }
+  }
+  endGame(condition) {
+    if (condition === "win") {
+      this.win();
+    } else {
+      this.loss();
+      return;
+    }
+  }
+  win() {
+    this.elements.audio.cannonAmbient.pause();
+    this.elements.audio.soundtrack.pause();
+    this.isRunning = false;
+    console.log("win");
+  }
+  loss() {
+    this.elements.audio.cannonAmbient.pause();
+    this.elements.audio.soundtrack.pause();
+    this.isRunning = false;
   }
   handleAudio() {
     const main_theme = this.elements.audio.soundtrack;
-    main_theme.src = "/assets/audio/main_theme.mp3";
-    main_theme.volume = 0.05;
+    main_theme.src = "/assets/audio/pirateship_main.mp3";
+    main_theme.volume = 0.07;
     const ambience = this.elements.audio.ambience;
     ambience.src = "/assets/audio/thunderstorm.mp3";
     ambience.volume = 0.05;
@@ -342,7 +388,7 @@ class Game {
     cannon_2.volume = 0.3;
     const cannonAmbient = this.elements.audio.cannonAmbient;
     cannonAmbient.src = "/assets/audio/distant_cannons.mp3";
-    cannonAmbient.volume = 0.5;
+    cannonAmbient.volume = 0.48;
     cannonAmbient.loop = true;
     const shipHit = this.elements.audio.shipHit;
     shipHit.src = "/assets/audio/ship_hit.mp3";
@@ -383,16 +429,3 @@ const dreadnought = new Ship("dreadnought", 5);
 
 game.renderTitle();
 game.handleAudio();
-
-// computer turn {
-//   let suggestedHits = []
-//   let randomIndex = Math.random() * suggesthits.length ?
-//   if (!playerturn) {
-//     randomcell()
-//     if (randomcell.classlist.contains("taken") {
-//       randomcell.classlist.remove("taken")
-//       randomcell.classlist.add("hit")
-//       suggestedHits.push((randomcell + 1), (randomcell - 1), (randomcell + 10), randomcell - 10)
-//     })
-//   }
-// }
