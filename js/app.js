@@ -1,6 +1,7 @@
 class Game {
   constructor() {
     this.isRunning;
+    this.easterEggFound = false;
     this.computerTurn;
     this.height = 10;
     this.width = 10;
@@ -86,6 +87,7 @@ class Game {
   }
   renderGame() {
     this.renderGameboard();
+    this.easterEgg();
     this.renderLog();
     this.addShip("computer", sloop);
     this.addShip("computer", sloop_2);
@@ -237,6 +239,16 @@ class Game {
       return false;
     }
   }
+  easterEgg() {
+    const playerCells = document.querySelectorAll("#playerGrid div");
+    const randomCell = Math.floor(Math.random() * 100)
+    console.log(randomCell);
+    playerCells[randomCell].addEventListener('click', () => { 
+      if (!game.easterEggFound) {
+      game.updateLog("What's this? You found a message in a bottle! ... No matter how hard or impossible it is, never lose sight of your goal - Luffy")
+      game.easterEggFound = true;
+    }})
+  }
   handlePlayerTurn() {
     const computerCells = document.querySelectorAll("#computerGrid div");
     const computerShipHealth = {
@@ -295,7 +307,6 @@ class Game {
         }
       }
     }
-    setTimeout(() => game.updateLog("..."), 5000)
   }
   handleComputerTurn() {
     const playerCells = document.querySelectorAll("#playerGrid div");
