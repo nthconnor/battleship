@@ -3,6 +3,9 @@ class Game {
     this.height = 10;
     this.width = 10;
     this.elements = {
+      body: document.querySelector("body"),
+      title: document.createElement("h1"),
+      combatLog: document.createElement("div"),
       buttons: {
         // startButton -> renderGame
         // rotateButton -> renderShipContainer
@@ -18,9 +21,27 @@ class Game {
       // shipContainer
     };
   }
+  renderTitle() {
+    this.elements.title.innerText = "PIRATESHIP";
+    this.elements.title.classList.add("title");
+    document.body.append(this.elements.title);
+    this.renderButton("start", "body", this.renderGame.bind(this));
+  }
   renderGame() {
     this.renderGameboard();
-    this.renderButton("start", "gameboard");
+    this.renderLog();
+    this.elements.buttons.startButton.style.display = "none";
+    this.addShip("computer", sloop);
+    this.addShip("computer", sloop_2);
+    this.addShip("computer", brig);
+    this.addShip("computer", galleon);
+    this.addShip("computer", dreadnought);
+    this.addShip("player", sloop);
+    this.addShip("player", sloop_2);
+    this.addShip("player", brig);
+    this.addShip("player", galleon);
+    this.addShip("player", dreadnought);
+    this.changeText("");
   }
   renderGameboard() {
     this.elements.gameboard = document.createElement("div");
@@ -44,6 +65,22 @@ class Game {
       this.elements.grids[`${user}Grid`].appendChild(cell);
     }
   }
+  renderLog() {
+    this.elements.combatLog.classList.add("combatLog");
+    this.elements.combatLog.innerHTML = "";
+    this.elements.gameboard.appendChild(this.elements.combatLog);
+  }
+  changeText(string) {
+    let characterPosition = 0;
+    function addLetter() {
+      if (characterPosition < string.length) {
+        game.elements.combatLog.innerHTML += string.charAt(characterPosition);
+        characterPosition++;
+        setTimeout(addLetter, 80);
+      }
+    }
+    addLetter();
+  }
   renderShipContainer() {
     this.elements.shipContainer = document.createElement("div");
     this.elements.shipContainer.classList.add("shipContainer");
@@ -65,7 +102,7 @@ class Game {
     }
     ship.preview.style.transform = `rotate(${ship.angle}deg)`;
   }
-  renderButton(buttonName, location, event) {
+  renderButton(buttonName, location, buttonEvent) {
     this.elements.buttons[`${buttonName}Button`] =
       document.createElement("button");
     this.elements.buttons[`${buttonName}Button`].classList.add("button");
@@ -77,7 +114,7 @@ class Game {
     );
     this.elements.buttons[`${buttonName}Button`].addEventListener(
       "click",
-      event
+      buttonEvent
     );
   }
   getRandomCellBlock() {
@@ -170,17 +207,8 @@ const brig = new Ship("brig", 3);
 const galleon = new Ship("galleon", 4);
 const dreadnought = new Ship("dreadnought", 5);
 
-game.renderGame();
-game.addShip("computer", sloop);
-game.addShip("computer", sloop_2);
-game.addShip("computer", brig);
-game.addShip("computer", galleon);
-game.addShip("computer", dreadnought);
-game.addShip("player", sloop);
-game.addShip("player", sloop_2);
-game.addShip("player", brig);
-game.addShip("player", galleon);
-game.addShip("player", dreadnought);
+game.renderTitle();
+// game.renderGame();
 
 // handle turn logic
 // player should click a cell, display feedback on wether it was a hit or miss
@@ -189,7 +217,6 @@ game.addShip("player", dreadnought);
 // handle win/loss
 //  if all ships on either side sink
 // end game
-
 
 /* 
 computer turn {
