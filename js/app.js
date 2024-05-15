@@ -7,27 +7,48 @@ class Game {
     this.elements = {
       body: document.querySelector("body"),
       title: document.createElement("h1"),
-      combatLog: document.createElement("div"),
+      combatLog: {
+        window: document.createElement("div"),
+        hitText: [],
+        missText: [],
+        sinkText: [],
+      },
       buttons: {},
       grids: {},
       ships: [],
       audio: {
         soundtrack: document.createElement("audio"),
+        ambience: document.createElement("audio"),
         startButton: document.createElement("audio"),
+        cannon_1: document.createElement("audio"),
+        cannon_2: document.createElement("audio"),
+        cannonAmbient: document.createElement("audio")
       },
     };
+    this.log;
   }
   onStart() {
     this.renderGame();
+    this.handlePlayerTurn();
     this.elements.buttons.startButton.style.display = "none";
+    this.elements.title.style.visibility = "hidden";
+    this.elements.body.style.backgroundImage =
+      "url(/assets/backgrounds/storm_gif2.gif)";
     this.elements.audio.soundtrack.play();
+    this.elements.audio.ambience.play();
     this.elements.audio.startButton.play();
+    setTimeout(() => {
+      this.isRunning = true;
+    }, 4000);
   }
   renderTitle() {
     this.elements.title.innerText = "PIRATESHIP";
     this.elements.title.classList.add("title");
     document.body.append(this.elements.title);
     this.renderButton("start", "body", this.onStart.bind(this));
+  }
+  initGame() {
+    this.isRunning = false;
   }
   renderGame() {
     this.renderGameboard();
@@ -43,7 +64,7 @@ class Game {
     this.addShip("player", galleon);
     this.addShip("player", dreadnought);
     setTimeout(() => {
-      this.updateLog("enemy ships ahead, fire when ready!")
+      this.updateLog("enemy ships ahead, fire when ready!");
     }, 500);
   }
   renderGameboard() {
@@ -69,20 +90,21 @@ class Game {
     }
   }
   renderLog() {
-    this.elements.combatLog.classList.add("combatLog");
-    this.elements.combatLog.innerHTML = "";
-    this.elements.gameboard.appendChild(this.elements.combatLog);
+    this.elements.combatLog.window.classList.add("combatLog");
+    this.elements.gameboard.appendChild(this.elements.combatLog.window);
   }
   updateLog(string) {
-    this.elements.combatLog.style.visibility = "visible";
+    this.elements.combatLog.window.style.visibility = "visible";
     let characterPosition = 0;
     function addLetter() {
       if (characterPosition < string.length) {
-        game.elements.combatLog.innerHTML += string.charAt(characterPosition);
+        game.elements.combatLog.window.innerHTML +=
+          string.charAt(characterPosition);
         characterPosition++;
         setTimeout(addLetter, 80);
       }
     }
+    this.elements.combatLog.window.innerHTML = "";
     addLetter();
   }
   renderShipContainer() {
@@ -149,6 +171,7 @@ class Game {
     shipCells.forEach((cell) => {
       cell.classList.add(`${user}_${ship.type}`);
       cell.classList.add("taken");
+      cell.id = ship.type;
     });
 
     function validCell(startCell) {
@@ -178,16 +201,62 @@ class Game {
       return false;
     }
   }
-  handleTurns() {
-
+  handlePlayerTurn() {
+    const computerCells = document.querySelectorAll("#computerGrid div");
+    const computerShipHealth = {
+      sloop: 2,
+      sloop_2: 2,
+      brig: 3,
+      galleon: 4,
+      dreadnought: 5,
+    };
+    for (let i = 0; i < computerCells.length; i++) {
+      computerCells[i].addEventListener("click", handleClick);
+    }
+    function handleClick(e) {
+      if (game.isRunning) {
+        game.elements.audio.cannonAmbient.play();
+        game.elements.audio.cannon_1.currentTime = 0;
+        game.elements.audio.cannon_1.play();
+        if (e.target.classList.contains("taken")) {
+          computerShipHealth[e.target.id] -= 1;
+          e.target.classList.add("hit");
+          checkBoard(e.target.id);
+        } else {
+          e.target.classList.add("miss");
+        }
+        function checkBoard(shipID) {
+          if (computerShipHealth[shipID] === 0) {
+            const sunkShipCells = document.querySelectorAll(`#computerGrid #${shipID}`);
+            sunkShipCells.forEach((cell) => {
+              cell.classList.remove("taken");
+              cell.classList.add("sunk");
+            });
+          }
+        }
+      }
+    }
   }
   handleAudio() {
     const main_theme = this.elements.audio.soundtrack;
     main_theme.src = "/assets/audio/main_theme.mp3";
-    main_theme.volume = 0.07;
+    main_theme.volume = 0.05;
+    const ambience = this.elements.audio.ambience;
+    ambience.src = "/assets/audio/thunderstorm.mp3";
+    ambience.volume = 0.1;
     const startButtonSound = this.elements.audio.startButton;
     startButtonSound.src = "/assets/audio/start_button.mp3";
     startButtonSound.volume = 0.5;
+    const cannon_1 = this.elements.audio.cannon_1;
+    cannon_1.src = "/assets/audio/cannon1.mp3";
+    cannon_1.volume = 0.4;
+    const cannon_2 = this.elements.audio.cannon_2;
+    cannon_2.src = "/assets/audio/cannon2.mp3";
+    cannon_2.volume = 0.4;
+    const cannonAmbient = this.elements.audio.cannonAmbient
+    cannonAmbient.src = "/assets/audio/distant_cannons.mp3"
+    cannonAmbient.volume = 0.7
+    cannonAmbient.loop = true;
   }
 }
 
@@ -224,7 +293,6 @@ const dreadnought = new Ship("dreadnought", 5);
 
 game.renderTitle();
 game.handleAudio();
-
 
 // computer turn {
 //   let suggestedHits = []
