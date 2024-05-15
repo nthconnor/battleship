@@ -18,7 +18,10 @@ body {
   height: 100%;
   width: 100vw;
   margin: 0 auto;
-  background: #ffffff;
+  background-image: url('/assets/backgrounds/background1.gif');
+  background-size: 1900px;
+  background-position: -150px -150px;
+  background-repeat: no-repeat;
 }
 
 .gameboard {
@@ -26,9 +29,11 @@ body {
   position: fixed;
   top: 34%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -30%);
   width: 800px;
   height: 400px;
+  border: 5px solid #402b1b;
+  border-radius: 6px;
 }
 
 .grid {
@@ -100,36 +105,52 @@ width: 400px;
   margin: 5px;
 }
 
-.sloop {
-  background: #a07858;
+.computer_sloop {
+  background: none;
 }
-.sloop_2 {
-  background: #a18065;
+.computer_sloop_2 {
+  background: none;
 }
-.brig {
-  background: #894e1d;
+.computer_brig {
+  background: none;
 }
-.galleon {
-  background: #4b321e;
+.computer_galleon {
+  background: none;
 }
-.dreadnought {
-  background: #4b1b12;
+.computer_dreadnought {
+  background: none;
 }
 
-.playerShip {
-  background-image: none;
-  background-color: #9c6234;
-  border: #603f23;
+.player_sloop {
+  background: #846744;
+  border-color: #382317;
+}
+.player_sloop_2 {
+  background: #856743;
+  border-color: #382317;
+}
+.player_brig {
+  background: #594529;
+  border-color: #382317;
+}
+.player_galleon {
+  background: #71472e;
+  border-color: #382317;
+}
+.player_dreadnought {
+  background: #442f23;
+  border-color: #2a1a12;
 }
 
 .button {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-weight: bold;
-  color: rgb(19, 58, 95);
-  height: 40px;
+  font-size: 18px;
+  color: #462e1d;
+  height: 50px;
   width: 80px;
-  background-color: #0088ff;
-  border: 2px solid #99cffe;
+  background-color: #8b5e3f;
+  border: 3px solid #462e1d;
   border-radius: 5px;
 }
 
@@ -139,7 +160,7 @@ width: 400px;
 
 #startButton {
   position: absolute;
-  transform: translate(360px, -50px);
+  transform: translate(360px, 425px);
 }
 
 #rotateButton {
