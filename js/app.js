@@ -48,6 +48,7 @@ class Game {
     }, 8000);
   }
   renderTitle() {
+    this.elements.body.style.backgroundImage = "url(/assets/backgrounds/background1.gif)"
     this.elements.title.innerText = "PIRATESHIP";
     this.elements.title.classList.add("title");
     document.body.append(this.elements.title);
