@@ -39,7 +39,7 @@ class Game {
     this.elements.buttons.rulesButton.style.display = "none";
     this.elements.title.style.visibility = "hidden";
     this.elements.body.style.backgroundImage =
-      "url(/assets/backgrounds/storm_gif2.gif)";
+      "url(assets/backgrounds/storm_gif2.gif)";
     this.elements.audio.soundtrack.play();
     this.elements.audio.ambience.play();
     this.elements.audio.startButton.play();
@@ -48,7 +48,7 @@ class Game {
     }, 8000);
   }
   renderTitle() {
-    this.elements.body.style.backgroundImage = "url(/assets/backgrounds/background1.gif)"
+    this.elements.body.style.backgroundImage = "url(assets/backgrounds/background1.gif)"
     this.elements.title.innerText = "PIRATESHIP";
     this.elements.title.classList.add("title");
     document.body.append(this.elements.title);
