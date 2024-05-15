@@ -318,7 +318,7 @@ class Game {
       dreadnought: 5,
     };
     game.elements.audio.cannonAmbient.play();
-    setTimeout(() => setInterval(computerMove, 200), 1000);
+    setTimeout(() => setInterval(computerMove, 1000), 1000);
     function computerMove() {
       if (game.isRunning) {
         do {
