@@ -242,7 +242,6 @@ class Game {
   easterEgg() {
     const playerCells = document.querySelectorAll("#playerGrid div");
     const randomCell = Math.floor(Math.random() * 100)
-    console.log(randomCell);
     playerCells[randomCell].addEventListener('click', () => { 
       if (!game.easterEggFound) {
       game.updateLog("What's this? You found a message in a bottle! ... No matter how hard or impossible it is, never lose sight of your goal - Luffy")
@@ -319,7 +318,7 @@ class Game {
       dreadnought: 5,
     };
     game.elements.audio.cannonAmbient.play();
-    setTimeout(() => setInterval(computerMove, 1000), 1000);
+    setTimeout(() => setInterval(computerMove, 200), 1000);
     function computerMove() {
       if (game.isRunning) {
         do {
@@ -442,12 +441,6 @@ class Ship {
     this.preview.style.width = `${this.length * 35}px`;
     container.appendChild(this.preview);
   }
-  // rotate() {
-  //   if (this.angle === 0) {
-  //     this.angle += 90;
-  //     this.preview.style.transform = `rotate(${this.angle}deg)`;
-  //   } else {return}
-  // }
 }
 
 const game = new Game();
