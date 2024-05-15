@@ -372,26 +372,26 @@ class Game {
   }
   handleAudio() {
     const main_theme = this.elements.audio.soundtrack;
-    main_theme.src = "/assets/audio/pirateship_main.mp3";
+    main_theme.src = "assets/audio/pirateship_main.mp3";
     main_theme.volume = 0.07;
     const ambience = this.elements.audio.ambience;
-    ambience.src = "/assets/audio/thunderstorm.mp3";
+    ambience.src = "assets/audio/thunderstorm.mp3";
     ambience.volume = 0.05;
     const startButtonSound = this.elements.audio.startButton;
-    startButtonSound.src = "/assets/audio/start_button.mp3";
+    startButtonSound.src = "assets/audio/start_button.mp3";
     startButtonSound.volume = 0.3;
     const cannon_1 = this.elements.audio.cannon_1;
-    cannon_1.src = "/assets/audio/cannon1.mp3";
+    cannon_1.src = "assets/audio/cannon1.mp3";
     cannon_1.volume = 0.3;
     const cannon_2 = this.elements.audio.cannon_2;
-    cannon_2.src = "/assets/audio/cannon2.mp3";
+    cannon_2.src = "assets/audio/cannon2.mp3";
     cannon_2.volume = 0.3;
     const cannonAmbient = this.elements.audio.cannonAmbient;
-    cannonAmbient.src = "/assets/audio/distant_cannons.mp3";
+    cannonAmbient.src = "assets/audio/distant_cannons.mp3";
     cannonAmbient.volume = 0.48;
     cannonAmbient.loop = true;
     const shipHit = this.elements.audio.shipHit;
-    shipHit.src = "/assets/audio/ship_hit.mp3";
+    shipHit.src = "assets/audio/ship_hit.mp3";
     shipHit.volume = 0.08;
   }
 }
