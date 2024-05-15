@@ -12,7 +12,7 @@ A new take on the classic game of Battleship with pirate rules (if any). This ga
 - The first to sink all enemy ships is the winner.
 - Sunk ships are marked with a skull and crossbones
 
-# Pictures of Game:
+# Screenshots:
 ![title-screen](assets/screenshots/title_screenshot.png)
 ![start-screen](assets/screenshots/start_screenshot.png)
 ![gameplay-screen](assets/screenshots/gameplay_screenshot.png)
@@ -27,6 +27,7 @@ https://nthconnor.github.io/battleship/
    
 - User input for crew and captain name
 - Ability to place ships where you want
+- Additional combat log text
  - A level system with unique environments and enemy types
  - A currency system
     - Upgrade weapons to unlock additional firing patterns
