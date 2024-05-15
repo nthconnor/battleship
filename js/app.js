@@ -1,7 +1,7 @@
 class Game {
   constructor() {
     this.isRunning;
-    this.turn;
+    this.computerTurn;
     this.height = 10;
     this.width = 10;
     this.elements = {
@@ -19,6 +19,8 @@ class Game {
       ships: [],
       audio: {
         soundtrack: document.createElement("audio"),
+        win: document.createElement("audio"),
+        loss: document.createElement("audio"),
         ambience: document.createElement("audio"),
         startButton: document.createElement("audio"),
         cannon_1: document.createElement("audio"),
@@ -31,20 +33,19 @@ class Game {
   }
   onStart() {
     this.renderGame();
-    setTimeout(() => {
-      this.handlePlayerTurn();
-    }, 8000);
-    this.handleComputerTurn();
     this.elements.buttons.startButton.style.display = "none";
     this.elements.buttons.rulesButton.style.display = "none";
     this.elements.title.style.visibility = "hidden";
-    this.elements.body.classList.add("playing")
+    this.elements.body.classList.add("playing");
     this.elements.audio.soundtrack.play();
     this.elements.audio.ambience.play();
     this.elements.audio.startButton.play();
     setTimeout(() => {
       this.isRunning = true;
-    }, 8000);
+    }, 6000);
+    setTimeout(() => {
+      this.handlePlayerTurn();
+    }, 6000);
   }
   renderTitle() {
     this.elements.title.innerText = "PIRATESHIP";
@@ -72,6 +73,7 @@ class Game {
     closeButton.href = "#";
     closeButton.classList.add("closeButton");
     closeButton.addEventListener("click", () => {
+      header.innerText = "";
       this.elements.rules.style.visibility = "hidden";
       this.elements.title.style.visibility = "visible";
       rulesText.innerText = "";
@@ -80,6 +82,7 @@ class Game {
   }
   initGame() {
     this.isRunning = false;
+    this.computerTurn = false;
   }
   renderGame() {
     this.renderGameboard();
@@ -96,7 +99,7 @@ class Game {
     this.addShip("player", dreadnought);
     setTimeout(() => {
       this.updateLog(
-        "Captain placeholder, the enemy fleet is upon us. Cannons are at the ready, on your signal!"
+        "Captain placeholder, the enemy fleet is upon us. Fire when ready!"
       );
     }, 500);
   }
@@ -251,9 +254,6 @@ class Game {
       if (game.isRunning) {
         game.elements.audio.cannon_1.currentTime = 0;
         game.elements.audio.cannon_1.play();
-        setTimeout(() => {
-          game.elements.audio.cannonAmbient.play();
-        }, 1000);
         if (e.target.classList.contains("taken")) {
           computerShipHealth[e.target.id] -= 1;
           e.target.classList.add("hit");
@@ -276,17 +276,23 @@ class Game {
           }
         }
       }
+      if (!game.computerTurn) {
+        game.handleComputerTurn();
+        game.computerTurn = true;
+      }
     }
     function checkWinLoss() {
-      if (
-        computerShipHealth.sloop === 0 &&
-        computerShipHealth.sloop_2 === 0 &&
-        computerShipHealth.brig === 0 &&
-        computerShipHealth.galleon === 0 &&
-        computerShipHealth.dreadnought === 0
-      ) {
-        game.endGame("win");
-        return;
+      if (game.isRunning) {
+        if (
+          computerShipHealth.sloop === 0 &&
+          computerShipHealth.sloop_2 === 0 &&
+          computerShipHealth.brig === 0 &&
+          computerShipHealth.galleon === 0 &&
+          computerShipHealth.dreadnought === 0
+        ) {
+          game.endGame("win");
+          game.isRunning = false;
+        }
       }
     }
   }
@@ -300,14 +306,14 @@ class Game {
       galleon: 4,
       dreadnought: 5,
     };
-    setTimeout(() => setInterval(computerMove, 1500), 1000);
+    game.elements.audio.cannonAmbient.play();
+    setTimeout(() => setInterval(computerMove, 200), 1000);
     function computerMove() {
       if (game.isRunning) {
         do {
           let randomCellIndex = getRandomCellIndex();
           randomCell = playerCells[randomCellIndex];
-        } while (randomCell.classList.contains("computerMiss"));
-        console.log(randomCell);
+        } while (randomCell.classList.contains("computerMiss") || randomCell.classList.contains("computerHit"));
         if (randomCell.classList.contains("taken")) {
           const shipID = randomCell.id;
           playerShipHealth[shipID] -= 1;
@@ -339,6 +345,7 @@ class Game {
       return Math.floor(Math.random() * 100);
     }
     function checkWinLoss() {
+      if (game.isRunning) {
       if (
         playerShipHealth.sloop === 0 &&
         playerShipHealth.sloop_2 === 0 &&
@@ -347,7 +354,8 @@ class Game {
         playerShipHealth.dreadnought === 0
       ) {
         game.endGame("loss");
-      }
+        game.isRunning = false;
+      }}
     }
   }
   endGame(condition) {
@@ -361,18 +369,24 @@ class Game {
   win() {
     this.elements.audio.cannonAmbient.pause();
     this.elements.audio.soundtrack.pause();
-    this.isRunning = false;
-    console.log("win");
+    this.elements.audio.win.play();
+    this.updateLog("The enemy is defeated!")
   }
   loss() {
     this.elements.audio.cannonAmbient.pause();
     this.elements.audio.soundtrack.pause();
-    this.isRunning = false;
+    this.elements.audio.loss.play()
   }
   handleAudio() {
     const main_theme = this.elements.audio.soundtrack;
     main_theme.src = "assets/audio/pirateship_main.mp3";
-    main_theme.volume = 0.07;
+    main_theme.volume = 0.08;
+    const win_theme = this.elements.audio.win;
+    win_theme.src = "assets/audio/win_theme.mp3"
+    win_theme.volume = 0.2;
+    const loss_sound = this.elements.audio.loss
+    loss_sound.src = "assets/audio/loss_sound.mp3"
+    loss_sound.volume = 0.2;
     const ambience = this.elements.audio.ambience;
     ambience.src = "assets/audio/thunderstorm.mp3";
     ambience.volume = 0.05;
@@ -391,7 +405,7 @@ class Game {
     cannonAmbient.loop = true;
     const shipHit = this.elements.audio.shipHit;
     shipHit.src = "assets/audio/ship_hit.mp3";
-    shipHit.volume = 0.08;
+    shipHit.volume = 0.1;
   }
 }
 
@@ -426,5 +440,6 @@ const brig = new Ship("brig", 3);
 const galleon = new Ship("galleon", 4);
 const dreadnought = new Ship("dreadnought", 5);
 
+game.initGame();
 game.renderTitle();
 game.handleAudio();
