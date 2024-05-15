@@ -66,7 +66,7 @@ class Game {
     const rulesText = document.createElement("p");
     rulesText.classList.add("rulesText");
     rulesText.innerText =
-      'The battle begins once the first shot is fired. \nBoth sides engage in a "fire at will" style fight. \nSunk ships are marked with a Ώ';
+      '! Ships are randomized for both sides ! \n ! The battle begins once the first shot is fired.!\n! Both sides engage in a "fire at will" style fight, you are only limited by how fast your crew can fire a cannon !\n! Sunk ships are marked with Ώ !';
     this.elements.rules.appendChild(rulesText);
     const closeButton = document.createElement("a");
     closeButton.innerText = "Close";
@@ -295,6 +295,7 @@ class Game {
         }
       }
     }
+    setTimeout(() => game.updateLog("..."), 5000)
   }
   handleComputerTurn() {
     const playerCells = document.querySelectorAll("#playerGrid div");
@@ -307,13 +308,16 @@ class Game {
       dreadnought: 5,
     };
     game.elements.audio.cannonAmbient.play();
-    setTimeout(() => setInterval(computerMove, 200), 1000);
+    setTimeout(() => setInterval(computerMove, 1000), 1000);
     function computerMove() {
       if (game.isRunning) {
         do {
           let randomCellIndex = getRandomCellIndex();
           randomCell = playerCells[randomCellIndex];
-        } while (randomCell.classList.contains("computerMiss") || randomCell.classList.contains("computerHit"));
+        } while (
+          randomCell.classList.contains("computerMiss") ||
+          randomCell.classList.contains("computerHit")
+        );
         if (randomCell.classList.contains("taken")) {
           const shipID = randomCell.id;
           playerShipHealth[shipID] -= 1;
@@ -346,16 +350,17 @@ class Game {
     }
     function checkWinLoss() {
       if (game.isRunning) {
-      if (
-        playerShipHealth.sloop === 0 &&
-        playerShipHealth.sloop_2 === 0 &&
-        playerShipHealth.brig === 0 &&
-        playerShipHealth.galleon === 0 &&
-        playerShipHealth.dreadnought === 0
-      ) {
-        game.endGame("loss");
-        game.isRunning = false;
-      }}
+        if (
+          playerShipHealth.sloop === 0 &&
+          playerShipHealth.sloop_2 === 0 &&
+          playerShipHealth.brig === 0 &&
+          playerShipHealth.galleon === 0 &&
+          playerShipHealth.dreadnought === 0
+        ) {
+          game.endGame("loss");
+          game.isRunning = false;
+        }
+      }
     }
   }
   endGame(condition) {
@@ -370,22 +375,23 @@ class Game {
     this.elements.audio.cannonAmbient.pause();
     this.elements.audio.soundtrack.pause();
     this.elements.audio.win.play();
-    this.updateLog("The enemy is defeated!")
+    this.updateLog("The enemy is defeated!");
   }
   loss() {
     this.elements.audio.cannonAmbient.pause();
     this.elements.audio.soundtrack.pause();
-    this.elements.audio.loss.play()
+    this.elements.audio.loss.play();
+    this.updateLog("Dead men tell no tales...");
   }
   handleAudio() {
     const main_theme = this.elements.audio.soundtrack;
     main_theme.src = "assets/audio/pirateship_main.mp3";
     main_theme.volume = 0.08;
     const win_theme = this.elements.audio.win;
-    win_theme.src = "assets/audio/win_theme.mp3"
+    win_theme.src = "assets/audio/win_theme.mp3";
     win_theme.volume = 0.2;
-    const loss_sound = this.elements.audio.loss
-    loss_sound.src = "assets/audio/loss_sound.mp3"
+    const loss_sound = this.elements.audio.loss;
+    loss_sound.src = "assets/audio/loss_sound.mp3";
     loss_sound.volume = 0.2;
     const ambience = this.elements.audio.ambience;
     ambience.src = "assets/audio/thunderstorm.mp3";
@@ -395,17 +401,17 @@ class Game {
     startButtonSound.volume = 0.3;
     const cannon_1 = this.elements.audio.cannon_1;
     cannon_1.src = "assets/audio/cannon1.mp3";
-    cannon_1.volume = 0.3;
+    cannon_1.volume = 0.25;
     const cannon_2 = this.elements.audio.cannon_2;
     cannon_2.src = "assets/audio/cannon2.mp3";
-    cannon_2.volume = 0.3;
+    cannon_2.volume = 0.25;
     const cannonAmbient = this.elements.audio.cannonAmbient;
     cannonAmbient.src = "assets/audio/distant_cannons.mp3";
     cannonAmbient.volume = 0.48;
     cannonAmbient.loop = true;
     const shipHit = this.elements.audio.shipHit;
     shipHit.src = "assets/audio/ship_hit.mp3";
-    shipHit.volume = 0.1;
+    shipHit.volume = 0.2;
   }
 }
 

@@ -69,12 +69,12 @@ body.playing {
 
 .rulesText {
   text-align: center;
-  line-height: 50px;
+  line-height: 40px;
 }
 
 .closeButton {
   position: relative;
-  top: 185px;
+  top: 100px;
   color: #866d5d;
   text-decoration: none;
 }
