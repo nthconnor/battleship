@@ -38,8 +38,7 @@ class Game {
     this.elements.buttons.startButton.style.display = "none";
     this.elements.buttons.rulesButton.style.display = "none";
     this.elements.title.style.visibility = "hidden";
-    this.elements.body.style.backgroundImage =
-      "url(assets/backgrounds/storm_gif2.gif)";
+    this.elements.body.classList.add("playing")
     this.elements.audio.soundtrack.play();
     this.elements.audio.ambience.play();
     this.elements.audio.startButton.play();
