@@ -7,6 +7,7 @@ class Game {
     this.elements = {
       body: document.querySelector("body"),
       title: document.createElement("h1"),
+      rules: document.createElement("div"),
       combatLog: {
         window: document.createElement("div"),
         hitText: [],
@@ -22,7 +23,8 @@ class Game {
         startButton: document.createElement("audio"),
         cannon_1: document.createElement("audio"),
         cannon_2: document.createElement("audio"),
-        cannonAmbient: document.createElement("audio")
+        cannonAmbient: document.createElement("audio"),
+        shipHit: document.createElement("audio"),
       },
     };
     this.log;
@@ -31,6 +33,7 @@ class Game {
     this.renderGame();
     this.handlePlayerTurn();
     this.elements.buttons.startButton.style.display = "none";
+    this.elements.buttons.rulesButton.style.display = "none";
     this.elements.title.style.visibility = "hidden";
     this.elements.body.style.backgroundImage =
       "url(/assets/backgrounds/storm_gif2.gif)";
@@ -46,6 +49,32 @@ class Game {
     this.elements.title.classList.add("title");
     document.body.append(this.elements.title);
     this.renderButton("start", "body", this.onStart.bind(this));
+    this.renderButton("rules", "body", this.displayRules.bind(this));
+  }
+  displayRules() {
+    this.elements.title.style.visibility = "hidden";
+    this.elements.rules.style.visibility = "visible";
+    this.elements.rules.classList.add("rules");
+    document.body.appendChild(this.elements.rules);
+    const header = document.createElement("h1");
+    this.elements.rules.appendChild(header);
+    header.classList.add("rulesHeader");
+    header.innerText = "The Pirate Code";
+    const rulesText = document.createElement("p");
+    rulesText.classList.add("rulesText");
+    rulesText.innerText =
+      'The battle begins once the first shot is fired. \nBoth sides engage in a "fire at will" style fight. \nSunk ships are marked with a Ώ';
+    this.elements.rules.appendChild(rulesText);
+    const closeButton = document.createElement("a");
+    closeButton.innerText = "Close";
+    closeButton.href = "#";
+    closeButton.classList.add("closeButton");
+    closeButton.addEventListener("click", () => {
+      this.elements.rules.style.visibility = "hidden";
+      this.elements.title.style.visibility = "visible";
+      rulesText.innerText = "";
+    });
+    this.elements.rules.appendChild(closeButton);
   }
   initGame() {
     this.isRunning = false;
@@ -64,7 +93,9 @@ class Game {
     this.addShip("player", galleon);
     this.addShip("player", dreadnought);
     setTimeout(() => {
-      this.updateLog("enemy ships ahead, fire when ready!");
+      this.updateLog(
+        "Captain placeholder, the enemy fleet is upon us. Cannons are at the ready, on your signal!"
+      );
     }, 500);
   }
   renderGameboard() {
@@ -215,22 +246,29 @@ class Game {
     }
     function handleClick(e) {
       if (game.isRunning) {
-        game.elements.audio.cannonAmbient.play();
         game.elements.audio.cannon_1.currentTime = 0;
         game.elements.audio.cannon_1.play();
+        setTimeout(() => {
+          game.elements.audio.cannonAmbient.play();
+        }, 1000);
         if (e.target.classList.contains("taken")) {
           computerShipHealth[e.target.id] -= 1;
           e.target.classList.add("hit");
           checkBoard(e.target.id);
+          game.elements.audio.shipHit.currentTime = 0;
+          game.elements.audio.shipHit.play();
         } else {
           e.target.classList.add("miss");
         }
         function checkBoard(shipID) {
           if (computerShipHealth[shipID] === 0) {
-            const sunkShipCells = document.querySelectorAll(`#computerGrid #${shipID}`);
+            const sunkShipCells = document.querySelectorAll(
+              `#computerGrid #${shipID}`
+            );
             sunkShipCells.forEach((cell) => {
               cell.classList.remove("taken");
               cell.classList.add("sunk");
+              cell.innerHTML = "Ώ";
             });
           }
         }
@@ -243,20 +281,23 @@ class Game {
     main_theme.volume = 0.05;
     const ambience = this.elements.audio.ambience;
     ambience.src = "/assets/audio/thunderstorm.mp3";
-    ambience.volume = 0.1;
+    ambience.volume = 0.05;
     const startButtonSound = this.elements.audio.startButton;
     startButtonSound.src = "/assets/audio/start_button.mp3";
-    startButtonSound.volume = 0.5;
+    startButtonSound.volume = 0.3;
     const cannon_1 = this.elements.audio.cannon_1;
     cannon_1.src = "/assets/audio/cannon1.mp3";
-    cannon_1.volume = 0.4;
+    cannon_1.volume = 0.3;
     const cannon_2 = this.elements.audio.cannon_2;
     cannon_2.src = "/assets/audio/cannon2.mp3";
-    cannon_2.volume = 0.4;
-    const cannonAmbient = this.elements.audio.cannonAmbient
-    cannonAmbient.src = "/assets/audio/distant_cannons.mp3"
-    cannonAmbient.volume = 0.7
+    cannon_2.volume = 0.3;
+    const cannonAmbient = this.elements.audio.cannonAmbient;
+    cannonAmbient.src = "/assets/audio/distant_cannons.mp3";
+    cannonAmbient.volume = 0.45;
     cannonAmbient.loop = true;
+    const shipHit = this.elements.audio.shipHit;
+    shipHit.src = "/assets/audio/ship_hit.mp3";
+    shipHit.volume = 0.08;
   }
 }
 
