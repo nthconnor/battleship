@@ -14,6 +14,8 @@ All ship types
 Fixed dimensions will help me simplify some of the math in my app.js
 */
 
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&display=swap');
+
 body {
   height: 100%;
   width: 100vw;
@@ -36,6 +38,32 @@ body {
   border-radius: 6px;
 }
 
+.title {
+  font-family: "Pirata One";
+  color: #efd97d;
+  text-align: center;
+  font-size: 150px;
+  margin: 200px auto;
+}
+
+.combatLog {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #16100deb;
+  height: 150px;
+  width: 500px;
+  position: absolute;
+  top: 425px;
+  left: 150px;
+  text-align: center;
+  border: 2px solid #efd87d12;
+  color: #efd97d;
+  border-radius: 10px;
+  font-family: 'Pirata One';
+  font-size: 25px;
+}
+
 .grid {
 display: flex;
 flex-wrap: wrap;
@@ -48,6 +76,16 @@ width: 400px;
   background: url("/assets/backgrounds/storm_gif.gif");
   background-size: 120%;
   filter: brightness(100%) contrast(100%);
+  animation: storm 10s infinite alternate linear;
+}
+
+@keyframes storm {
+  0% {
+    background-size: 120%;
+  }
+  100% {
+    background-size: 130%;
+  }
 }
 
 .cell {
@@ -59,7 +97,7 @@ width: 400px;
 }
 
 .cell:hover {
-  border: 3px solid #0088ff;
+  border: 3px solid #efd97d;
 }
 
 .playerCell {
@@ -146,11 +184,11 @@ width: 400px;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-weight: bold;
   font-size: 18px;
-  color: #462e1d;
+  color: #866d5d;
   height: 50px;
-  width: 80px;
-  background-color: #8b5e3f;
-  border: 3px solid #462e1d;
+  width: 100px;
+  background-color: #efd97d;
+  border: 3px solid #ffefa0;
   border-radius: 5px;
 }
 
@@ -160,7 +198,7 @@ width: 400px;
 
 #startButton {
   position: absolute;
-  transform: translate(360px, 425px);
+  transform: translate(700px, -150px);
 }
 
 #rotateButton {
