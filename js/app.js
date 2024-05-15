@@ -1,36 +1,37 @@
 class Game {
   constructor() {
+    this.isRunning;
+    this.turn;
     this.height = 10;
     this.width = 10;
     this.elements = {
       body: document.querySelector("body"),
       title: document.createElement("h1"),
       combatLog: document.createElement("div"),
-      buttons: {
-        // startButton -> renderGame
-        // rotateButton -> renderShipContainer
+      buttons: {},
+      grids: {},
+      ships: [],
+      audio: {
+        soundtrack: document.createElement("audio"),
+        startButton: document.createElement("audio"),
       },
-      grids: {
-        // playerGrid
-        //computerGrid
-      },
-      ships: [
-        // pushing ship types from Ship class render method
-      ],
-      // gameboard
-      // shipContainer
     };
+  }
+  onStart() {
+    this.renderGame();
+    this.elements.buttons.startButton.style.display = "none";
+    this.elements.audio.soundtrack.play();
+    this.elements.audio.startButton.play();
   }
   renderTitle() {
     this.elements.title.innerText = "PIRATESHIP";
     this.elements.title.classList.add("title");
     document.body.append(this.elements.title);
-    this.renderButton("start", "body", this.renderGame.bind(this));
+    this.renderButton("start", "body", this.onStart.bind(this));
   }
   renderGame() {
     this.renderGameboard();
     this.renderLog();
-    this.elements.buttons.startButton.style.display = "none";
     this.addShip("computer", sloop);
     this.addShip("computer", sloop_2);
     this.addShip("computer", brig);
@@ -41,7 +42,9 @@ class Game {
     this.addShip("player", brig);
     this.addShip("player", galleon);
     this.addShip("player", dreadnought);
-    this.changeText("");
+    setTimeout(() => {
+      this.updateLog("enemy ships ahead, fire when ready!")
+    }, 500);
   }
   renderGameboard() {
     this.elements.gameboard = document.createElement("div");
@@ -70,7 +73,8 @@ class Game {
     this.elements.combatLog.innerHTML = "";
     this.elements.gameboard.appendChild(this.elements.combatLog);
   }
-  changeText(string) {
+  updateLog(string) {
+    this.elements.combatLog.style.visibility = "visible";
     let characterPosition = 0;
     function addLetter() {
       if (characterPosition < string.length) {
@@ -174,6 +178,17 @@ class Game {
       return false;
     }
   }
+  handleTurns() {
+
+  }
+  handleAudio() {
+    const main_theme = this.elements.audio.soundtrack;
+    main_theme.src = "/assets/audio/main_theme.mp3";
+    main_theme.volume = 0.07;
+    const startButtonSound = this.elements.audio.startButton;
+    startButtonSound.src = "/assets/audio/start_button.mp3";
+    startButtonSound.volume = 0.5;
+  }
 }
 
 class Ship {
@@ -208,27 +223,18 @@ const galleon = new Ship("galleon", 4);
 const dreadnought = new Ship("dreadnought", 5);
 
 game.renderTitle();
-// game.renderGame();
+game.handleAudio();
 
-// handle turn logic
-// player should click a cell, display feedback on wether it was a hit or miss
-// computer selects a cell at random - display feedback
-// *** if computer hits, target cells in that area
-// handle win/loss
-//  if all ships on either side sink
-// end game
 
-/* 
-computer turn {
-  let suggestedHits = []
-  let randomIndex = Math.random() * suggesthits.length ?
-  if (!playerturn) {
-    randomcell()
-    if (randomcell.classlist.contains("taken") {
-      randomcell.classlist.remove("taken")
-      randomcell.classlist.add("hit")
-      suggestedHits.push((randomcell + 1), (randomcell - 1), (randomcell + 10), randomcell - 10)
-    })
-  }
-}
-*/
+// computer turn {
+//   let suggestedHits = []
+//   let randomIndex = Math.random() * suggesthits.length ?
+//   if (!playerturn) {
+//     randomcell()
+//     if (randomcell.classlist.contains("taken") {
+//       randomcell.classlist.remove("taken")
+//       randomcell.classlist.add("hit")
+//       suggestedHits.push((randomcell + 1), (randomcell - 1), (randomcell + 10), randomcell - 10)
+//     })
+//   }
+// }
